@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6111bad1c5bfb8e7d46fe04028abc125",
+    "content-hash": "958b127febb8222a860e9734d2bc2e50",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -2806,6 +2806,71 @@
                 "psr-3"
             ],
             "time": "2016-10-10T12:19:37+00:00"
+        },
+        {
+            "name": "pvsaintpe/yii2-boost",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/pvsaintpe/yii2-boost.git",
+                "reference": "db8dbf66303beda5ef190e4ab97f0562418bd3d3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-boost/zipball/db8dbf66303beda5ef190e4ab97f0562418bd3d3",
+                "reference": "db8dbf66303beda5ef190e4ab97f0562418bd3d3",
+                "shasum": ""
+            },
+            "require": {
+                "kartik-v/yii2-date-range": "1.6.7",
+                "kartik-v/yii2-datecontrol": "1.9.4",
+                "kartik-v/yii2-detail-view": "1.7.6",
+                "kartik-v/yii2-dropdown-x": "*",
+                "kartik-v/yii2-editable": "1.7.4",
+                "kartik-v/yii2-export": "1.2.5",
+                "kartik-v/yii2-field-range": "1.3.0",
+                "kartik-v/yii2-grid": "3.2.5",
+                "kartik-v/yii2-icons": "1.4.1",
+                "kartik-v/yii2-mpdf": "@dev",
+                "kartik-v/yii2-tabs-x": "1.2.2",
+                "kartik-v/yii2-widgets": "3.4.0",
+                "php": ">=7.0.0",
+                "yiisoft/yii2": "2.0.15.1",
+                "yiisoft/yii2-authclient": "^2.1",
+                "yiisoft/yii2-bootstrap": "2.0.6",
+                "yiisoft/yii2-debug": "2.0.6",
+                "yiisoft/yii2-imagine": "2.0.3",
+                "yiisoft/yii2-swiftmailer": "~2.0.0"
+            },
+            "type": "yii2-extension",
+            "extra": {
+                "asset-installer-paths": {
+                    "npm-asset-library": "vendor/npm",
+                    "bower-asset-library": "vendor/bower"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "pvsaintpe\\boost\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pavel Veselov",
+                    "email": "pvsaintpe@icloud.com"
+                }
+            ],
+            "description": "Package",
+            "keywords": [
+                "code generator",
+                "gii",
+                "yii2"
+            ],
+            "time": "2018-10-02T21:18:48+00:00"
         },
         {
             "name": "setasign/fpdi",

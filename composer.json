@@ -33,6 +33,7 @@
     "kartik-v/yii2-export": "1.2.5",
     "kartik-v/yii2-grid": "3.2.5",
     "kartik-v/yii2-detail-view": "1.7.6",
+    "pvsaintpe/yii2-boost": "*",
     "kartik-v/yii2-mpdf": "@dev"
   },
   "autoload": {
@@ -41,7 +42,6 @@
     }
   },
   "extra": {
-    "bootstrap": "pvsaintpe\\db\\Bootstrap",
     "asset-installer-paths": {
       "npm-asset-library": "vendor/npm",
       "bower-asset-library": "vendor/bower"
