@@ -4,7 +4,7 @@ namespace pvsaintpe\db\components;
 
 /**
  * Class Connection
- * @package common\components\db
+ * @package pvsaintpe\db\components
  * @method Command|\yii\db\Command createCommand($sql = null, $params = [])
  */
 class Connection extends \yii\db\Connection

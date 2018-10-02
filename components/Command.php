@@ -8,7 +8,7 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class Command
- * @package common\components\db
+ * @package pvsaintpe\db\components
  */
 class Command extends \yii\db\Command
 {
