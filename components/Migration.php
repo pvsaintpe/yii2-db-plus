@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
  * @property Connection $db
  * @package console\components
  */
-class Migration extends \yii\boost\db\Migration
+class Migration extends \pvsaintpe\boost\db\Migration
 {
     /**
      * @return array|string|\yii\db\Connection|Connection
