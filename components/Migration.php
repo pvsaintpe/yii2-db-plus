@@ -283,9 +283,13 @@ class Migration extends BaseMigration
     /**
      * @param string $table
      * @param string $column
+     * @throws \yii\db\Exception
      */
     public function dropColumn($table, $column)
     {
+        if (!$this->existColumn($table, $column)) {
+            return;
+        }
         $fks = $this->getForeignNamesColumns($this->db->getTableSchema($table));
         if ($name = array_search($column, $fks)) {
             $this->dropForeignKey($name, $table);
@@ -296,6 +300,7 @@ class Migration extends BaseMigration
     /**
      * @param string $table
      * @param array $columns
+     * @throws \yii\db\Exception
      */
     public function dropColumns($table, array $columns)
     {
