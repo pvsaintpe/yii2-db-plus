@@ -253,7 +253,6 @@ class Migration extends BaseMigration
      * @param string $table
      * @param string $column
      * @param string $type
-     * @throws \yii\db\Exception
      */
     public function alterColumn($table, $column, $type)
     {
@@ -278,7 +277,6 @@ class Migration extends BaseMigration
      * @param string $table
      * @param string $column
      * @param \yii\db\ColumnSchemaBuilder|string $type
-     * @throws \yii\db\Exception
      */
     public function addColumn($table, $column, $type)
     {
@@ -288,7 +286,6 @@ class Migration extends BaseMigration
     /**
      * @param string $table
      * @param string $column
-     * @throws \yii\db\Exception
      */
     public function dropColumn($table, $column)
     {
@@ -302,7 +299,6 @@ class Migration extends BaseMigration
     /**
      * @param string $table
      * @param array $columns
-     * @throws \yii\db\Exception
      */
     public function dropColumns($table, array $columns)
     {
@@ -319,7 +315,6 @@ class Migration extends BaseMigration
      * @param string|array $refColumns
      * @param null $delete
      * @param null $update
-     * @throws \yii\db\Exception
      */
     public function addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete = null, $update = null)
     {
@@ -329,7 +324,6 @@ class Migration extends BaseMigration
     /**
      * @param string $name
      * @param string $table
-     * @throws \yii\db\Exception
      */
     public function dropForeignKey($name, $table)
     {
@@ -340,7 +334,6 @@ class Migration extends BaseMigration
      * @param string $table
      * @param string $name
      * @param string $newName
-     * @throws \yii\db\Exception
      */
     public function renameColumn($table, $name, $newName)
     {
@@ -349,7 +342,6 @@ class Migration extends BaseMigration
 
     /**
      * @param string $table
-     * @throws \yii\db\Exception
      */
     public function dropTable($table)
     {
@@ -357,7 +349,8 @@ class Migration extends BaseMigration
     }
 
     /**
-     * @param $tableName
+     * @param string $tableName
+     * @throws \yii\db\Exception
      */
     protected function createTriggerDeleteRestrictions($tableName)
     {
@@ -374,7 +367,8 @@ class Migration extends BaseMigration
     }
 
     /**
-     * @param $tableName
+     * @param string $tableName
+     * @throws \yii\db\Exception
      */
     protected function createTriggerUpdateRestrictions($tableName)
     {
@@ -391,10 +385,18 @@ class Migration extends BaseMigration
     }
 
     /**
+     * Получает имена колонок с внешнем ключом
+     * ```php
+     * [
+     *  nameFk => column,
+     *  ....
+     * ]
+     * ```
+     *
      * @param TableSchema $tableSchema
      * @return array
      */
-    private function getForeignNamesColumns($tableSchema)
+    private function getForeignNamesColumns(TableSchema $tableSchema)
     {
         return array_map(function ($foreignKey) {
             return array_filter(array_keys($foreignKey))[1];
