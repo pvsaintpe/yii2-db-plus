@@ -237,4 +237,21 @@ class Connection extends \yii\db\Connection
     {
         return $this->createCommand("SHOW KEYS FROM `{$tableName}` WHERE Column_name LIKE '{$columnName}'")->queryAll();
     }
+
+    /**
+     * Создает таблицу $tableName клонируя структуру таблицы $sourceTable в $sourceSchema
+     * @param string $tableName Целевое имя таблицы
+     * @param string $sourceTable Имя таблицы источника
+     * @param string|null $sourceSchema Имя схемы источника
+     * @throws \yii\db\Exception
+     * @return void
+     */
+    public function cloneTable($tableName, $sourceTable, $sourceSchema = null)
+    {
+        $source = "`{$sourceTable}`";
+        if ($sourceSchema) {
+            $source = "`{$sourceSchema}`.{$source}";
+        }
+        $this->execute("CREATE TABLE `{$tableName}` LIKE {$source}");
+    }
 }

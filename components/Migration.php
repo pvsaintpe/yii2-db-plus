@@ -262,15 +262,12 @@ class Migration extends BaseMigration
     /**
      * @param string $tableName
      * @param string $columnName
-     * @return bool
+     * @return false|null|string
+     * @throws \yii\db\Exception
      */
     public function hasColumn($tableName, $columnName)
     {
-        $tableColumns = $this->db->getTableSchema($tableName)->columnNames;
-        if (in_array($columnName, $tableColumns)) {
-            return true;
-        }
-        return false;
+        return $this->db->existColumn($tableName, $columnName);
     }
 
     /**
@@ -401,5 +398,18 @@ class Migration extends BaseMigration
         return array_map(function ($foreignKey) {
             return array_filter(array_keys($foreignKey))[1];
         }, $tableSchema->foreignKeys);
+    }
+
+    /**
+     * @inheritdoc
+     * @param $tableName
+     * @param $sourceTable
+     * @param null $sourceSchema
+     * @throws \yii\db\Exception
+     * @return void
+     */
+    protected function cloneTable($tableName, $sourceTable, $sourceSchema = null)
+    {
+        $this->db->cloneTable($tableName, $sourceTable, $sourceSchema);
     }
 }
