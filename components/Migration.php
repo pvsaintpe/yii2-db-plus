@@ -401,14 +401,106 @@ class Migration extends BaseMigration
     }
 
     /**
-     * @inheritdoc
-     * @param $tableName
-     * @param $sourceTable
-     * @param null $sourceSchema
+     * Получить расширенную информацию о колонках $tableName, исключая $restrict-columns
+     * @param string $tableName
+     * @param array $restrict
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getColumns($tableName, $restrict = [])
+    {
+        return $this->db->getColumns($tableName, $restrict);
+    }
+
+    /**
+     * Получить уникальные ключи (без PRIMARY)
+     * @param string $tableName
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getUniqueKeys($tableName)
+    {
+        return $this->db->getUniqueKeys($tableName);
+    }
+
+    /**
+     * Получить обычные ключи/индексы
+     * @param string $tableName
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getKeys($tableName)
+    {
+        return $this->db->getKeys($tableName);
+    }
+
+    /**
+     * Получить PRIMARY ключи в таблице $tableName
+     * @param string $tableName
+     * @return array
+     * @throws \yii\db\Exception
+     */
+    public function getPrimaryKeys($tableName)
+    {
+        return $this->db->getPrimaryKeys($tableName);
+    }
+
+    /**
+     * Проверяет наличие таблицы $tableName
+     * @param string $tableName
+     * @return false|null|string
+     * @throws \yii\db\Exception
+     */
+    public function existTable($tableName)
+    {
+        return $this->db->existTable($tableName);
+    }
+
+    /**
+     * Проверяет наличие столбца $columnName в таблице $tableName
+     * @param string $tableName
+     * @param string $columnName
+     * @return false|null|string
+     * @throws \yii\db\Exception
+     */
+    public function existColumn($tableName, $columnName)
+    {
+        return $this->db->existColumn($tableName, $columnName);
+    }
+
+    /**
+     * Проверяет наличие ключа/индекса $key в таблице $tableName
+     * @param string $tableName
+     * @param string $key
+     * @return false|null|string
+     * @throws \yii\db\Exception
+     */
+    public function existKey($tableName, $key = 'PRIMARY')
+    {
+        return $this->db->existKey($tableName, $key);
+    }
+
+    /**
+     * Проверяет наличие ключа/индекса к столбцу $columnName в таблице $tableName
+     * @param string $tableName
+     * @param string $columnName
+     * @return array|false
+     * @throws \yii\db\Exception
+     */
+    public function existKeyOnColumn($tableName, $columnName)
+    {
+        return $this->db->existKeyOnColumn($tableName, $columnName);
+    }
+
+    /**
+     * Создает таблицу $tableName клонируя структуру таблицы $sourceTable в $sourceSchema
+     * @param string $tableName Целевое имя таблицы
+     * @param string $sourceTable Имя таблицы источника
+     * @param string|null $sourceSchema Имя схемы источника
      * @throws \yii\db\Exception
      * @return void
      */
-    protected function cloneTable($tableName, $sourceTable, $sourceSchema = null)
+    public function cloneTable($tableName, $sourceTable, $sourceSchema = null)
     {
         $this->db->cloneTable($tableName, $sourceTable, $sourceSchema);
     }
