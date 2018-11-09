@@ -149,6 +149,7 @@ class Migration extends BaseMigration
      * )
      * @param string $definer CURRENT_USER
      * @param boolean $leavePrefixEnable
+     * @param string $dbPrefix
      * @throws \yii\db\Exception
      */
     public function createTrigger(
@@ -157,7 +158,8 @@ class Migration extends BaseMigration
         $sql,
         $event = 'BEFORE INSERT',
         $definer = null,
-        $leavePrefixEnable = false
+        $leavePrefixEnable = false,
+        $dbPrefix = null
     ) {
         if ($definer === null) {
             $definer = 'CURRENT_USER';
@@ -181,6 +183,7 @@ class Migration extends BaseMigration
                 $definerPrefix = "DEFINER = {$definer}";
             }
 
+            $dbName = $dbPrefix ?: $dbName;
             $this->dropTrigger($name);
             $this->execute("
                 CREATE {$definerPrefix}
@@ -200,9 +203,10 @@ class Migration extends BaseMigration
      * @param array $params @example [['type' => 'IN', 'name' => 'arg_name', 'format' => 'INT UNSIGNED'], ...]
      * @param string $definer CURRENT_USER
      * @param array $options @example ['NOT DETERMINISTIC', 'CONTAINS SQL', 'SQL SECURITY DEFINER']
+     * @param string $dbPrefix
      * @throws \yii\db\Exception
      */
-    public function createProcedure($name, $sql, $params = [], $definer = 'CURRENT_USER', $options = [])
+    public function createProcedure($name, $sql, $params = [], $definer = 'CURRENT_USER', $options = [], $dbPrefix = null)
     {
         if (($dbName = $this->db->getName()) !== false) {
             $args = array_map(
@@ -215,6 +219,7 @@ class Migration extends BaseMigration
                 },
                 $params
             );
+            $dbName = $dbPrefix ?: $dbName;
             $this->dropProcedure($name);
             $this->execute("
                 CREATE DEFINER = {$definer}
@@ -229,22 +234,26 @@ class Migration extends BaseMigration
 
     /**
      * @param string $name
+     * @param string $dbPrefix
      * @throws \yii\db\Exception
      */
-    public function dropProcedure($name)
+    public function dropProcedure($name, $dbPrefix = null)
     {
         if (($dbName = $this->db->getName()) !== false) {
+            $dbName = $dbPrefix ?: $dbName;
             $this->execute("DROP PROCEDURE IF EXISTS `{$dbName}`.`{$name}`");
         }
     }
 
     /**
      * @param string $name
+     * @param string $dbPrefix
      * @throws \yii\db\Exception
      */
-    public function dropTrigger($name)
+    public function dropTrigger($name, $dbPrefix = null)
     {
         if (($dbName = $this->db->getName()) !== false) {
+            $dbName = $dbPrefix ?: $dbName;
             $this->execute("DROP TRIGGER IF EXISTS `{$dbName}`.`{$name}`");
         }
     }
