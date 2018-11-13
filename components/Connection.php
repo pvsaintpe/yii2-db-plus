@@ -165,6 +165,15 @@ class Connection extends \yii\db\Connection
     }
 
     /**
+     * @param $tableName
+     * @return array
+     */
+    public function getForeignKeys($tableName)
+    {
+        return $this->getTableSchema($tableName) ? $this->getTableSchema($tableName)->foreignKeys : [];
+    }
+
+    /**
      * Получить обычные ключи/индексы
      * @param string $tableName
      * @return array

@@ -328,7 +328,42 @@ class Migration extends BaseMigration
      */
     public function addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete = null, $update = null)
     {
+        $name = $this->fixKeyName($name, $table, $columns, true, static::FOREIGN_KEY);
         parent::addForeignKey($name, $table, $columns, $refTable, $refColumns, $delete, $update);
+    }
+
+    /**
+     * @param null|string $name
+     * @param string $table
+     * @param array|string $columns
+     * @param bool $unique
+     */
+    public function createIndex($name, $table, $columns, $unique = false)
+    {
+        $name = $this->fixKeyName($name, $table, $columns, true, static::INDEX);
+        parent::createIndex($name, $table, $columns, $unique);
+    }
+
+    /**
+     * @param null|string $name
+     * @param string $table
+     * @param array|string $columns
+     */
+    public function createUnique($name, $table, $columns)
+    {
+        $name = $this->fixKeyName($name, $table, $columns, true, static::UNIQUE_KEY);
+        parent::createUnique($name, $table, $columns);
+    }
+
+    /**
+     * @param null|string $name
+     * @param string $table
+     * @param array|string $columns
+     */
+    public function addPrimaryKey($name, $table, $columns)
+    {
+        $name = $this->fixKeyName($name, $table, $columns, true, static::PRIMARY_KEY);
+        parent::addPrimaryKey($name, $table, $columns);
     }
 
     /**
@@ -459,6 +494,15 @@ class Migration extends BaseMigration
     }
 
     /**
+     * @param $tableName
+     * @return array
+     */
+    public function getForeignKeys($tableName)
+    {
+        return $this->db->getForeignKeys($tableName);
+    }
+
+    /**
      * Проверяет наличие таблицы $tableName
      * @param string $tableName
      * @return false|null|string
@@ -516,5 +560,37 @@ class Migration extends BaseMigration
     public function cloneTable($tableName, $sourceTable, $sourceSchema = null)
     {
         $this->db->cloneTable($tableName, $sourceTable, $sourceSchema);
+    }
+
+    /**
+     * @param string|null $name
+     * @param string $table
+     * @param string|array $columns
+     * @param bool $checkExists
+     * @param int $type
+     * @return string
+     * @throws
+     */
+    protected function fixKeyName($name, $table, $columns, $checkExists = false, $type = BaseMigration::FOREIGN_KEY)
+    {
+        switch ($type) {
+            case static::PRIMARY_KEY:
+                $seqName = 'PRIMARY';
+                break;
+            case static::UNIQUE_KEY:
+                $seqName = join('-', ['uk', $table, 'seq' . count($this->getUniqueKeys($table))]);
+                break;
+            case static::FOREIGN_KEY:
+                $seqName = join('-', ['fk', $table, 'seq' . count($this->getForeignKeys($table))]);
+                break;
+            case static::INDEX:
+                $seqName = join('-', ['index', $table, 'seq' . count($this->getKeys($table))]); // @todo getIndexes()
+                break;
+            case static::KEY:
+                $seqName = join('-', ['key', $table, 'seq' . count($this->getKeys($table))]);
+                break;
+        }
+
+        return $name ?: ($seqName ?? implode('-', array_merge((array)$table, (array)$columns)));
     }
 }
