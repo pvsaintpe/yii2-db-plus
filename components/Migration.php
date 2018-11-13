@@ -573,21 +573,31 @@ class Migration extends BaseMigration
      */
     protected function fixKeyName($name, $table, $columns, $checkExists = false, $type = BaseMigration::FOREIGN_KEY)
     {
+        $this->db->schema->refresh();
+
+        if (strlen($table) > 30) {
+            $tableIndex = [];
+            foreach (explode('_', $table) as $table_part) {
+                $tableIndex[] = substr($table_part, 0, 1);
+            }
+            $table = join('_', $tableIndex);
+        }
+
         switch ($type) {
             case static::PRIMARY_KEY:
                 $seqName = 'PRIMARY';
                 break;
             case static::UNIQUE_KEY:
-                $seqName = join('-', ['uk', $table, 'seq' . count($this->getUniqueKeys($table))]);
+                $seqName = join('-', ['uk', $table, uniqid()]);
                 break;
             case static::FOREIGN_KEY:
-                $seqName = join('-', ['fk', $table, 'seq' . count($this->getForeignKeys($table))]);
+                $seqName = join('-', ['fk', $table, uniqid()]);
                 break;
             case static::INDEX:
-                $seqName = join('-', ['index', $table, 'seq' . count($this->getKeys($table))]); // @todo getIndexes()
+                $seqName = join('-', ['index', $table, uniqid()]); // @todo getIndexes()
                 break;
             case static::KEY:
-                $seqName = join('-', ['key', $table, 'seq' . count($this->getKeys($table))]);
+                $seqName = join('-', ['key', $table, uniqid()]);
                 break;
         }
 
