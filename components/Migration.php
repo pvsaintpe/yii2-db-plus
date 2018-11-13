@@ -579,31 +579,33 @@ class Migration extends BaseMigration
 
         if (!$name) {
             $name = implode('-', array_merge((array)$table, (array)$columns));
-            if (strlen($name) >= 60) {
-                if (strlen($table) > 30) {
-                    $tableIndex = [];
-                    foreach (explode('_', $table) as $table_part) {
-                        $tableIndex[] = substr($table_part, 0, 1);
-                    }
-                    $table = join('_', $tableIndex);
-                }
+        }
 
-                switch ($type) {
-                    case static::UNIQUE_KEY:
-                        $name = join('-', ['uk', $table, uniqid('u')]);
-                        break;
-                    case static::FOREIGN_KEY:
-                        $name = join('-', ['fk', $table, uniqid('f')]);
-                        break;
-                    case static::INDEX:
-                        $name = join('-', ['index', $table, uniqid('i')]);
-                        break;
-                    default:
-                        $name = join('-', ['key', $table, uniqid('k')]);
-                        break;
+        if (strlen($name) >= 60) {
+            if (strlen($table) > 30) {
+                $tableIndex = [];
+                foreach (explode('_', $table) as $table_part) {
+                    $tableIndex[] = substr($table_part, 0, 1);
                 }
+                $table = join('_', $tableIndex);
+            }
+
+            switch ($type) {
+                case static::UNIQUE_KEY:
+                    $name = join('-', ['uk', $table, uniqid('u')]);
+                    break;
+                case static::FOREIGN_KEY:
+                    $name = join('-', ['fk', $table, uniqid('f')]);
+                    break;
+                case static::INDEX:
+                    $name = join('-', ['index', $table, uniqid('i')]);
+                    break;
+                default:
+                    $name = join('-', ['key', $table, uniqid('k')]);
+                    break;
             }
         }
+
         return $name;
     }
 
