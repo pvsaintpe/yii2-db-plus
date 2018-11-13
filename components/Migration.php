@@ -603,4 +603,21 @@ class Migration extends BaseMigration
 
         return $name ?: ($seqName ?? implode('-', array_merge((array)$table, (array)$columns)));
     }
+
+    /**
+     * Удаляет внешний ключ на колонке
+     * @param $table
+     * @param $column
+     */
+    public function dropColumnForeignKey($table, $column)
+    {
+        $tableColumns = $this->db->getTableSchema($table)->columnNames;
+        if (!in_array($column, $tableColumns)) {
+            return;
+        }
+        $fks = $this->getForeignNamesColumns($this->db->getTableSchema($table));
+        if ($name = array_search($column, $fks)) {
+            $this->dropForeignKey($name, $table);
+        }
+    }
 }
