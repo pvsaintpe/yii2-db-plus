@@ -585,7 +585,7 @@ class Migration extends BaseMigration
 
         switch ($type) {
             case static::PRIMARY_KEY:
-                $seqName = 'PRIMARY';
+                return $name;
                 break;
             case static::UNIQUE_KEY:
                 $seqName = join('-', ['uk', $table, uniqid()]);
