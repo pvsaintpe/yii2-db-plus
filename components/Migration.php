@@ -573,35 +573,38 @@ class Migration extends BaseMigration
      */
     protected function fixKeyName($name, $table, $columns, $checkExists = false, $type = BaseMigration::FOREIGN_KEY)
     {
-        $this->db->schema->refresh();
+        if ($type == static::PRIMARY_KEY) {
+            return $name;
+        }
 
-        if (strlen($table) > 30) {
-            $tableIndex = [];
-            foreach (explode('_', $table) as $table_part) {
-                $tableIndex[] = substr($table_part, 0, 1);
+        if (!$name) {
+            $name = implode('-', array_merge((array)$table, (array)$columns));
+            if (strlen($name) >= 60) {
+                if (strlen($table) > 30) {
+                    $tableIndex = [];
+                    foreach (explode('_', $table) as $table_part) {
+                        $tableIndex[] = substr($table_part, 0, 1);
+                    }
+                    $table = join('_', $tableIndex);
+                }
+
+                switch ($type) {
+                    case static::UNIQUE_KEY:
+                        $name = join('-', ['uk', $table, uniqid('u')]);
+                        break;
+                    case static::FOREIGN_KEY:
+                        $name = join('-', ['fk', $table, uniqid('f')]);
+                        break;
+                    case static::INDEX:
+                        $name = join('-', ['index', $table, uniqid('i')]);
+                        break;
+                    default:
+                        $name = join('-', ['key', $table, uniqid('k')]);
+                        break;
+                }
             }
-            $table = join('_', $tableIndex);
         }
-
-        switch ($type) {
-            case static::PRIMARY_KEY:
-                return $name;
-                break;
-            case static::UNIQUE_KEY:
-                $seqName = join('-', ['uk', $table, uniqid()]);
-                break;
-            case static::FOREIGN_KEY:
-                $seqName = join('-', ['fk', $table, uniqid()]);
-                break;
-            case static::INDEX:
-                $seqName = join('-', ['index', $table, uniqid()]); // @todo getIndexes()
-                break;
-            case static::KEY:
-                $seqName = join('-', ['key', $table, uniqid()]);
-                break;
-        }
-
-        return $name ?: ($seqName ?? implode('-', array_merge((array)$table, (array)$columns)));
+        return $name;
     }
 
     /**
