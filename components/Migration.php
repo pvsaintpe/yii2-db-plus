@@ -563,6 +563,20 @@ class Migration extends BaseMigration
     }
 
     /**
+     * @param string $baseName
+     * @param string $prefix
+     * @return string
+     */
+    protected function generateKeyName($baseName, $prefix)
+    {
+        $tableIndex = [];
+        foreach (explode('_', $baseName) as $table_part) {
+            $tableIndex[] = substr($table_part, 0, 1);
+        }
+        return $prefix . '-' . uniqid(join('_', $tableIndex) ?: 'johndoe');
+    }
+
+    /**
      * @param string|null $name
      * @param string $table
      * @param string|array $columns
