@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02664a312ad936b5c592b21f828513fd",
+    "content-hash": "e54a2f06059eafa170af7d3d8cdf5c49",
     "packages": [
         {
             "name": "bower-asset/inputmask",
@@ -307,16 +307,16 @@
         },
         {
             "name": "psr/log",
-            "version": "1.0.2",
+            "version": "1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d"
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
-                "reference": "4ebe3a8bf773a19edfe0a84b6585ba3d401b724d",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
+                "reference": "6c001f1daafa3a3ac1d8ff69ee4db8e799a654dd",
                 "shasum": ""
             },
             "require": {
@@ -350,25 +350,26 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2018-11-20T15:27:04+00:00"
         },
         {
             "name": "pvsaintpe/yii2-boost",
-            "version": "2.1.2",
+            "version": "2.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pvsaintpe/yii2-boost.git",
-                "reference": "93e6fb3a4b6a83e47648d9472d15a45208b2ceaf"
+                "reference": "b920e210fd6330354764a1916f17cb5c32af34da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pvsaintpe/yii2-boost/zipball/93e6fb3a4b6a83e47648d9472d15a45208b2ceaf",
-                "reference": "93e6fb3a4b6a83e47648d9472d15a45208b2ceaf",
+                "url": "https://api.github.com/repos/pvsaintpe/yii2-boost/zipball/b920e210fd6330354764a1916f17cb5c32af34da",
+                "reference": "b920e210fd6330354764a1916f17cb5c32af34da",
                 "shasum": ""
             },
             "require": {
                 "firephp/firephp-core": "*",
                 "psr/log": "*",
+                "pvsaintpe/yii2-db-plus": "*",
                 "yiisoft/yii2": ">=2.0.4"
             },
             "type": "yii2-extension",
@@ -399,7 +400,7 @@
                 "gii",
                 "yii2"
             ],
-            "time": "2018-11-13T12:42:34+00:00"
+            "time": "2018-11-19T13:31:01+00:00"
         },
         {
             "name": "yiisoft/yii2",
