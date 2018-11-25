@@ -2,17 +2,129 @@
 
 namespace pvsaintpe\db\components;
 
+use pvsaintpe\db\components\mysql\Schema;
+use pvsaintpe\db\components\TableSchema;
+use Yii;
+
 /**
  * Class Connection
+ *
  * @package pvsaintpe\db\components
- * @method Command|\yii\db\Command createCommand($sql = null, $params = [])
+ *
+// * @method Schema|\yii\db\Schema getSchema()
+// * @method TableSchema|\yii\db\TableSchema getTableSchema($name, $refresh = false)
  */
 class Connection extends \yii\db\Connection
 {
     /**
+     * @var string Custom PDO wrapper class.
+     * If not set, it will use [[PDO]] or [[\yii\db\mssql\PDO]] when MSSQL is used.
+     * @see pdo
+     */
+    public $pdoClass = 'pvsaintpe\db\components\mysql\Schema';
+
+    /**
+     * @var string the class used to create new database [[Command]] objects.
+     * If you want to extend the [[Command]] class,
+     * you may configure this property to use your extended version of the class.
+     * Since version 2.0.14 [[$commandMap]] is used if this property is set to its default value.
+     * @see createCommand
+     * @since 2.0.7
+     * @deprecated since 2.0.14. Use [[$commandMap]] for precise configuration.
+     */
+    public $commandClass = 'pvsaintpe\db\components\Command';
+
+    /**
+     * @var array mapping between PDO driver names and [[Schema]] classes.
+     * The keys of the array are PDO driver names while the values are either the corresponding
+     * schema class names or configurations. Please refer to [[Yii::createObject()]] for
+     * details on how to specify a configuration.
+     *
+     * This property is mainly used by [[getSchema()]] when fetching the database schema information.
+     * You normally do not need to set this property unless you want to use your own
+     * [[Schema]] class to support DBMS that is not supported by Yii.
+     */
+    public $schemaMap = [
+        'pgsql' => 'yii\db\pgsql\Schema', // PostgreSQL
+        'mysqli' => 'pvsaintpe\db\components\mysql\Schema', // MySQL
+        'mysql' => 'pvsaintpe\db\components\mysql\Schema', // MySQL
+        'sqlite' => 'yii\db\sqlite\Schema', // sqlite 3
+        'sqlite2' => 'yii\db\sqlite\Schema', // sqlite 2
+        'sqlsrv' => 'yii\db\mssql\Schema', // newer MSSQL driver on MS Windows hosts
+        'oci' => 'yii\db\oci\Schema', // Oracle driver
+        'mssql' => 'yii\db\mssql\Schema', // older MSSQL driver on MS Windows hosts
+        'dblib' => 'yii\db\mssql\Schema', // dblib drivers on GNU/Linux (and maybe other OSes) hosts
+        'cubrid' => 'yii\db\cubrid\Schema', // CUBRID
+    ];
+
+    /**
+     * @var array mapping between PDO driver names and [[Command]] classes.
+     * The keys of the array are PDO driver names while the values are either the corresponding
+     * command class names or configurations. Please refer to [[Yii::createObject()]] for
+     * details on how to specify a configuration.
+     *
+     * This property is mainly used by [[createCommand()]] to create new database [[Command]] objects.
+     * You normally do not need to set this property unless you want to use your own
+     * [[Command]] class or support DBMS that is not supported by Yii.
+     * @since 2.0.14
+     */
+    public $commandMap = [
+        'pgsql' => 'yii\db\Command', // PostgreSQL
+        'mysqli' => 'pvsaintpe\db\components\Command', // MySQL
+        'mysql' => 'pvsaintpe\db\components\Command', // MySQL
+        'sqlite' => 'yii\db\sqlite\Command', // sqlite 3
+        'sqlite2' => 'yii\db\sqlite\Command', // sqlite 2
+        'sqlsrv' => 'yii\db\Command', // newer MSSQL driver on MS Windows hosts
+        'oci' => 'yii\db\Command', // Oracle driver
+        'mssql' => 'yii\db\Command', // older MSSQL driver on MS Windows hosts
+        'dblib' => 'yii\db\Command', // dblib drivers on GNU/Linux (and maybe other OSes) hosts
+        'cubrid' => 'yii\db\Command', // CUBRID
+    ];
+
+    /**
      * @var string
      */
     private $dbName;
+
+    /**
+     * @param string $name
+     * @param bool $refresh
+     * @return \yii\db\TableSchema|TableSchema
+     */
+    public function getTableSchema($name, $refresh = false)
+    {
+        return parent::getTableSchema($name, $refresh);
+    }
+
+    /**
+     * @return \yii\db\Schema|Schema
+     */
+    public function getSchema()
+    {
+        return parent::getSchema();
+    }
+
+    /**
+     * Creates a command for execution.
+     * @param string $sql the SQL statement to be executed
+     * @param array $params the parameters to be bound to the SQL statement
+     * @return Command the DB command
+     */
+    public function createCommand($sql = null, $params = [])
+    {
+        $driver = $this->getDriverName();
+        $config = ['class' => 'pvsaintpe\db\components\Command'];
+        if ($this->commandClass !== $config['class']) {
+            $config['class'] = $this->commandClass;
+        } elseif (isset($this->commandMap[$driver])) {
+            $config = !is_array($this->commandMap[$driver]) ? ['class' => $this->commandMap[$driver]] : $this->commandMap[$driver];
+        }
+        $config['db'] = $this;
+        $config['sql'] = $sql;
+        /** @var Command $command */
+        $command = Yii::createObject($config);
+        return $command->bindValues($params);
+    }
 
     /**
      * @return bool|string
