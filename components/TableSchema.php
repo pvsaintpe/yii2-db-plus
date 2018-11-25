@@ -121,14 +121,6 @@ class TableSchema extends BaseTableSchema
     }
 
     /**
-     * @return array
-     */
-    public function getUniqueAttributes()
-    {
-        return [];
-    }
-
-    /**
      * @return ForeignKeySchema|null
      */
     public function getForeignKey(array $key)
