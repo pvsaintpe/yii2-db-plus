@@ -72,6 +72,63 @@ class TableSchema extends BaseTableSchema
     }
 
     /**
+     * @return array
+     */
+    public function getBooleanAttributes()
+    {
+        $attributes = [];
+        /** @var ColumnSchema $column */
+        foreach ($this->columns as $column) {
+            if ($column->getIsBoolean()) {
+                $attributes[] = $column->name;
+            }
+        }
+        return $attributes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRelationAttributes()
+    {
+        $attributes = [];
+        $foreignKeys = $this->foreignKeys;
+        foreach ($foreignKeys as $column) {
+            $key = array_shift($column);
+            $attribute = array_keys($column)[0];
+            $relationAttribute = array_values($column)[0];
+            $attributes[$attribute] = [
+                'table' => $key,
+                'key' => $relationAttribute
+            ];
+        }
+        return $attributes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getDatetimeAttributes()
+    {
+        $attributes = [];
+        /** @var ColumnSchema $column */
+        foreach ($this->columns as $column) {
+            if ($column->getIsDate() || $column->getIsDatetime()) {
+                $attributes[] = $column->name;
+            }
+        }
+        return $attributes;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUniqueAttributes()
+    {
+        return [];
+    }
+
+    /**
      * @return ForeignKeySchema|null
      */
     public function getForeignKey(array $key)
