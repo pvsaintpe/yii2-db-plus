@@ -17,13 +17,6 @@ use Yii;
 class Connection extends \yii\db\Connection
 {
     /**
-     * @var string Custom PDO wrapper class.
-     * If not set, it will use [[PDO]] or [[\yii\db\mssql\PDO]] when MSSQL is used.
-     * @see pdo
-     */
-    public $pdoClass = 'pvsaintpe\db\components\mysql\Schema';
-
-    /**
      * @var string the class used to create new database [[Command]] objects.
      * If you want to extend the [[Command]] class,
      * you may configure this property to use your extended version of the class.
