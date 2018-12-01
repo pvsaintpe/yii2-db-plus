@@ -263,10 +263,38 @@ class Connection extends \yii\db\Connection
      */
     public function getUniqueKeys($tableName)
     {
-        return $this->createCommand("
-            SHOW KEYS FROM `{$tableName}`
-            WHERE Key_name NOT LIKE 'PRIMARY' AND Non_unique LIKE 0
-        ")->queryAll();
+        return $this->createCommand(
+            "SHOW KEYS FROM `{$tableName}`WHERE Key_name NOT LIKE 'PRIMARY' AND Non_unique LIKE 0"
+        )->queryAll();
+    }
+
+    /**
+     * Получить первый уникальный ключ
+     * @param string $tableName
+     * @return string
+     * @throws \yii\db\Exception
+     */
+    public function getFirstUniqueKey($tableName)
+    {
+        $uniqueKeys = $this->createCommand(
+            "SHOW KEYS FROM `{$tableName}`WHERE Key_name NOT LIKE 'PRIMARY' AND Non_unique LIKE 0"
+        )->queryAll();
+
+        $firstKey = null;
+        foreach ($uniqueKeys as $uniqueKey) {
+            if (!$firstKey) {
+                $firstKey = $uniqueKey['Column_name'];
+            }
+            $column = $this->getTableSchema($tableName)->getColumn($uniqueKey['Column_name']);
+            if ($column->name == $uniqueKey['Column_name'] && in_array($column->type, [
+                    Schema::TYPE_STRING,
+                    Schema::TYPE_CHAR,
+                    Schema::TYPE_TEXT,
+                ])) {
+                return $column->name;
+            }
+        }
+        return $firstKey;
     }
 
     /**
