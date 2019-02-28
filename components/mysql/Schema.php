@@ -2,6 +2,7 @@
 
 namespace pvsaintpe\db\components\mysql;
 
+use pvsaintpe\boost\db\Expression;
 use pvsaintpe\db\components\ColumnSchema;
 use yii\db\mysql\Schema as MysqlSchema;
 use yii\base\NotSupportedException;
@@ -48,15 +49,28 @@ class Schema extends MysqlSchema
     }
 
     /**
-     * @inheritdoc
-     * @return ColumnSchema
+     * Loads the column information into a [[ColumnSchema]] object.
+     * @param array $info column information
+     * @return ColumnSchema the column schema object
      */
     protected function loadColumnSchema($info)
     {
         $column = parent::loadColumnSchema($info);
+
+        if (!$column->isPrimaryKey) {
+            if (($column->type === 'timestamp' || $column->type ==='datetime') && $info['default'] === 'current_timestamp()') {
+                $column->defaultValue = new Expression('current_timestamp()');
+            } elseif (isset($type) && $type === 'bit') {
+                $column->defaultValue = bindec(trim($info['default'], 'b\''));
+            } else {
+                $column->defaultValue = $column->phpTypecast($info['default']);
+            }
+        }
+
         if (is_object($column)) {
             $column = new ColumnSchema(get_object_vars($column));
         }
+
         return $column;
     }
 
