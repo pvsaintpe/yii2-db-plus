@@ -396,4 +396,63 @@ class Connection extends \yii\db\Connection
         }
         $this->execute("CREATE TABLE `{$tableName}` LIKE {$source}");
     }
+
+    /**
+     * Call procedure
+     * @param $name
+     * @param array $params
+     * @param int|null $fetchMode
+     * @throws
+     */
+    public function call($name, array $params = [], $fetchMode = null)
+    {
+        $arguments = join(', :', array_keys($params));
+        $this->execute("CALL $name(:{$arguments})", $params);
+    }
+
+    /**
+     * @param string $table
+     * @param array $where
+     * @param array $replace
+     * @param array $remove
+     * @throws
+     */
+    public function insertFrom($table, $where, $replace, $remove = [])
+    {
+        $alias = 'w';
+
+        /** @var TableSchema $tableSchema */
+        $tableSchema = $this->getTableSchema($table);
+
+        $columns = array_diff($tableSchema->getColumnNames(), $remove);
+
+        $values = [];
+        foreach ($columns as $column) {
+            if (array_key_exists($column, $replace)) {
+                $values[] = $this->quoteValue($replace[$column]);
+                continue;
+            }
+            $values[] = $alias . '.' . $column;
+        }
+
+        $conditions = [];
+        foreach ($where as $attribute => $condition) {
+            if (!is_array($condition)) {
+                $conditions[] = $alias . '.' . $attribute . ' = ' . $this->quoteValue($condition);
+            } else {
+                if (count($condition) > 0) {
+                    $conditions[] = $alias . '.' . $attribute . ' IN (' . implode(', ', $condition) . ')';
+                }
+            }
+        }
+
+        $sql = "
+            INSERT INTO `{$table}` (" . join(', ', $columns) . ")
+            SELECT " . join(', ', $values) . "
+            FROM `{$table}` `{$alias}`
+            WHERE " . join(' AND ', $conditions) . "
+        ";
+
+        $this->execute($sql);
+    }
 }
