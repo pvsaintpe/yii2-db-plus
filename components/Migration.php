@@ -2,6 +2,7 @@
 
 namespace pvsaintpe\db\components;
 
+use yii\db\ColumnSchemaBuilder;
 use yii\db\TableSchema;
 use pvsaintpe\boost\db\Migration as BaseMigration;
 
@@ -638,5 +639,35 @@ class Migration extends BaseMigration
         if ($name = array_search($column, $fks)) {
             $this->dropForeignKey($name, $table);
         }
+    }
+
+    /**
+     * Creates a medium text column.
+     * @return ColumnSchemaBuilder the column instance which can be further customized.
+     * @throws
+     */
+    public function mediumText()
+    {
+        return $this->db->getSchema()->createColumnSchemaBuilder('mediumtext');
+    }
+
+    /**
+     * Creates a long text column.
+     * @return ColumnSchemaBuilder the column instance which can be further customized.
+     * @throws
+     */
+    public function longText()
+    {
+        return $this->db->getSchema()->createColumnSchemaBuilder('longtext');
+    }
+
+    /**
+     * Creates a tiny text column.
+     * @return ColumnSchemaBuilder the column instance which can be further customized.
+     * @throws
+     */
+    public function tinyText()
+    {
+        return $this->db->getSchema()->createColumnSchemaBuilder('tinytext');
     }
 }
